@@ -19,7 +19,7 @@ impl JsonNode for BooleanNode {
 }
 
 impl JsonParticle for BooleanNode {
-    fn stringify_with_options(&self, _options: StringifyOptions) -> String {
+    fn stringify_with_options(&self, _options: &StringifyOptions) -> String {
         self.value.to_string()
     }
 }

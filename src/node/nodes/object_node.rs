@@ -39,7 +39,7 @@ impl ObjectNodeProperty {
 }
 
 impl JsonParticle for ObjectNodeProperty {
-    fn stringify_with_options(&self, options: StringifyOptions) -> String {
+    fn stringify_with_options(&self, options: &StringifyOptions) -> String {
         todo!()
     }
 }
@@ -83,7 +83,7 @@ impl JsonNode for ObjectNode {
 }
 
 impl JsonParticle for ObjectNode {
-    fn stringify_with_options(&self, options: StringifyOptions) -> String {
+    fn stringify_with_options(&self, options: &StringifyOptions) -> String {
         self.container_node.stringify_with_options(options)
     }
 }

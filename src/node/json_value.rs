@@ -22,7 +22,7 @@ impl JsonValue {
 }
 
 impl JsonParticle for JsonValue {
-    fn stringify_with_options(&self, options: StringifyOptions) -> String {
+    fn stringify_with_options(&self, options: &StringifyOptions) -> String {
         todo!()
     }
 }

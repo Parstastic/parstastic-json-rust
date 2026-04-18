@@ -13,7 +13,7 @@ impl JsonNode for NullNode {
 }
 
 impl JsonParticle for NullNode {
-    fn stringify_with_options(&self, _options: StringifyOptions) -> String {
+    fn stringify_with_options(&self, _options: &StringifyOptions) -> String {
         "null".to_string()
     }
 }

@@ -24,7 +24,7 @@ impl JsonNode for StringNode {
 }
 
 impl JsonParticle for StringNode {
-    fn stringify_with_options(&self, _options: StringifyOptions) -> String {
+    fn stringify_with_options(&self, _options: &StringifyOptions) -> String {
         let mut s = String::new();
         s.push(DELIMITER);
         s.push_str(&self.value);

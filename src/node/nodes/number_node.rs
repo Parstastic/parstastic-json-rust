@@ -110,7 +110,7 @@ impl JsonNode for NumberNode {
 }
 
 impl JsonParticle for NumberNode {
-    fn stringify_with_options(&self, _options: StringifyOptions) -> String {
+    fn stringify_with_options(&self, _options: &StringifyOptions) -> String {
         let mut s = String::new();
 
         s.push_str(&self.base.to_string());

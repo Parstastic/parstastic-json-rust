@@ -71,7 +71,7 @@ impl Whitespace {
 }
 
 impl JsonParticle for Whitespace {
-    fn stringify_with_options(&self, _options: StringifyOptions) -> String {
+    fn stringify_with_options(&self, _options: &StringifyOptions) -> String {
         WhitespaceCharacter::vec_to_string(&self.characters)
     }
 }

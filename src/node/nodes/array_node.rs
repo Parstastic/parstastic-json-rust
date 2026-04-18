@@ -50,7 +50,7 @@ impl JsonNode for ArrayNode {
 }
 
 impl JsonParticle for ArrayNode {
-    fn stringify_with_options(&self, options: StringifyOptions) -> String {
+    fn stringify_with_options(&self, options: &StringifyOptions) -> String {
         self.container_node.stringify_with_options(options)
     }
 }
