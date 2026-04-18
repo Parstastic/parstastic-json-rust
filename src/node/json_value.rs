@@ -5,14 +5,14 @@ use crate::node::{
     whitespace::Whitespace
 };
 
-pub struct JsonValue<T: JsonNode> {
+pub struct JsonValue {
     leading_whitespace: Whitespace,
-    json_node: T,
+    json_node: Box<dyn JsonNode>,
     trailing_whitespace: Whitespace
 }
 
-impl<T: JsonNode> JsonValue<T> {
-    pub fn new(leading_whitespace: Whitespace, json_node: T, trailing_whitespace: Whitespace) -> Self {
+impl JsonValue {
+    pub fn new(leading_whitespace: Whitespace, json_node: Box<dyn JsonNode>, trailing_whitespace: Whitespace) -> Self {
         Self {
             leading_whitespace,
             json_node,
@@ -21,7 +21,7 @@ impl<T: JsonNode> JsonValue<T> {
     }
 }
 
-impl<T: JsonNode> JsonParticle for JsonValue<T> {
+impl JsonParticle for JsonValue {
     fn stringify_with_options(&self, options: StringifyOptions) -> String {
         todo!()
     }
