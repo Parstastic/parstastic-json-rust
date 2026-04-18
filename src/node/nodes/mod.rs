@@ -1,3 +1,4 @@
+pub mod array_node;
 pub mod boolean_node;
 pub mod container_node;
 pub mod json_node;
