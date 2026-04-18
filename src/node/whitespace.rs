@@ -1,4 +1,7 @@
-use crate::node::json_particle::JsonParticle;
+use crate::node::{
+    json_particle::JsonParticle,
+    stringify_options::StringifyOptions
+};
 
 pub enum WhitespaceCharacter {
     Space,
@@ -68,7 +71,7 @@ impl Whitespace {
 }
 
 impl JsonParticle for Whitespace {
-    fn stringify_with_options(&self, _options: super::stringify_options::StringifyOptions) -> String {
+    fn stringify_with_options(&self, _options: StringifyOptions) -> String {
         WhitespaceCharacter::vec_to_string(&self.characters)
     }
 }
