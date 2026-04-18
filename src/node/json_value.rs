@@ -23,6 +23,10 @@ impl JsonValue {
 
 impl JsonParticle for JsonValue {
     fn stringify_with_options(&self, options: &StringifyOptions) -> String {
-        todo!()
+        let mut s = String::new();
+        s.push_str(&options.get_json_value_leading_whitespace(&self.leading_whitespace).stringify_with_options(&options));
+        s.push_str(&self.json_node.stringify_with_options(&options));
+        s.push_str(&options.get_json_value_trailing_whitespace(&self.trailing_whitespace).stringify_with_options(&options));
+        s
     }
 }
