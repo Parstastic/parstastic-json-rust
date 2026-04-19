@@ -15,6 +15,14 @@ impl JsonParsingResultError {
             parsing_process
         }
     }
+
+    pub fn get_message(&self) -> &str {
+        &self.message
+    }
+
+    pub fn get_parsing_process(&self) -> &JsonParsingProcess {
+        &self.parsing_process
+    }
 }
 
 
