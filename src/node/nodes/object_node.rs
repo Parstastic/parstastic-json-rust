@@ -43,7 +43,13 @@ impl ObjectNodeProperty {
 
 impl JsonParticle for ObjectNodeProperty {
     fn stringify_with_options(&self, options: &StringifyOptions) -> String {
-        todo!()
+        let mut s = String::new();
+        s.push_str(&options.get_object_node_property_leading_whitespace(&self.leading_whitespace).stringify_with_options(options));
+        s.push_str(&self.key.stringify_with_options(options));
+        s.push_str(&options.get_object_node_property_trailing_whitespace(&self.trailing_whitespace).stringify_with_options(options));
+        s.push(KEY_VALUE_DELIMITER);
+        s.push_str(&self.value.stringify_with_options(options));
+        s
     }
 }
 
