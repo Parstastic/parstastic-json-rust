@@ -21,7 +21,7 @@ pub trait JsonParticleParser<T: JsonParticle>: Sized {
     }
 
     fn parse(&mut self, parsing_process: &mut JsonParsingProcess) -> JsonParsingResult<T> {
-        let mut step = self.get_step();
+        let step = self.get_step();
         let result = step.execute(self, parsing_process);
         match result {
             Some(error) => JsonParsingResult::with_error(error),
