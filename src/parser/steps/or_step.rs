@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use crate::{
     node::json_particle::JsonParticle,
     parser::{
@@ -14,13 +12,13 @@ use crate::{
 };
 
 pub struct OrStep<JP: JsonParticle, JPP: JsonParticleParser<JP>> {
-    if_steps: HashMap<Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>>,
+    if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>,
     else_step: Box<dyn JsonParsingStep<JP, JPP>>
 }
 
 impl<JP: JsonParticle,  JPP: JsonParticleParser<JP>> OrStep<JP, JPP> {
     pub fn new(
-        if_steps: HashMap<Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>>,
+        if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>,
         else_step: Box<dyn JsonParsingStep<JP, JPP>>
     ) -> Self {
         Self {
@@ -29,14 +27,14 @@ impl<JP: JsonParticle,  JPP: JsonParticleParser<JP>> OrStep<JP, JPP> {
         }
     }
 
-    pub fn else_error(if_steps: HashMap<Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>>) -> Self {
+    pub fn else_error(if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>) -> Self {
         Self::new(
             if_steps,
             Box::new(ExportStep::new(|| false))
         )
     }
 
-    pub fn else_success(if_steps: HashMap<Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>>) -> Self {
+    pub fn else_success(if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>) -> Self {
         Self::new(
             if_steps,
             Box::new(ExportStep::new(|| true))
