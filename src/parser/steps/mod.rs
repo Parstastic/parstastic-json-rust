@@ -2,3 +2,4 @@ pub mod block_step;
 pub mod for_loop_step;
 pub mod json_parsing_step;
 pub mod loop_step;
+pub mod while_loop_step;
