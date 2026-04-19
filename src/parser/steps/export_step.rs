@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 use crate::{
     node::json_particle::JsonParticle,
     parser::{
@@ -8,23 +10,25 @@ use crate::{
     }
 };
 
-pub struct ExportStep {
-    exporter: Box<dyn Fn() -> bool>
+pub struct ExportStep<JP: JsonParticle, JPP: JsonParticleParser<JP>> {
+    _jp: PhantomData<JP>,
+    exporter: Box<dyn Fn(&mut JPP) -> bool>
 }
 
-impl ExportStep {
+impl<JP: JsonParticle, JPP: JsonParticleParser<JP>> ExportStep<JP, JPP> {
     pub fn new<F>(exporter: F) -> Self
-        where F: Fn() -> bool + 'static
+        where F: Fn(&mut JPP) -> bool + 'static
     {
         Self {
+            _jp: PhantomData,
             exporter: Box::new(exporter)
         }
     }
 }
 
-impl<JP: JsonParticle, JPP: JsonParticleParser<JP,>> JsonParsingStep<JP, JPP> for ExportStep {
-    fn execute(&self, _parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
-        if (self.exporter)() {
+impl<JP: JsonParticle, JPP: JsonParticleParser<JP,>> JsonParsingStep<JP, JPP> for ExportStep<JP, JPP> {
+    fn execute(&self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
+        if (self.exporter)(parser) {
             None
         } else {
             Some(JsonParsingResultError::new(

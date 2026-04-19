@@ -16,7 +16,7 @@ pub struct OrStep<JP: JsonParticle, JPP: JsonParticleParser<JP>> {
     else_step: Box<dyn JsonParsingStep<JP, JPP>>
 }
 
-impl<JP: JsonParticle,  JPP: JsonParticleParser<JP>> OrStep<JP, JPP> {
+impl<JP: JsonParticle + 'static,  JPP: JsonParticleParser<JP> + 'static> OrStep<JP, JPP> {
     pub fn new(
         if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>,
         else_step: Box<dyn JsonParsingStep<JP, JPP>>
@@ -30,14 +30,14 @@ impl<JP: JsonParticle,  JPP: JsonParticleParser<JP>> OrStep<JP, JPP> {
     pub fn else_error(if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>) -> Self {
         Self::new(
             if_steps,
-            Box::new(ExportStep::new(|| false))
+            Box::new(ExportStep::new(|_| false))
         )
     }
 
     pub fn else_success(if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>) -> Self {
         Self::new(
             if_steps,
-            Box::new(ExportStep::new(|| true))
+            Box::new(ExportStep::new(|_| true))
         )
     }
 }
