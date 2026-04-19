@@ -19,7 +19,7 @@ pub struct ParseStep<
 > {
     _jp: PhantomData<JP>,
     _jpp: PhantomData<JPP>,
-    parser: P,
+    parser_creator: Box<dyn Fn() -> P>,
     next_creator: Box<dyn Fn(T) -> S>
 }
 
@@ -27,13 +27,13 @@ impl<
     T: JsonParticle, P: JsonParticleParser<T>, S: JsonParsingStep<JP, JPP>,
     JP: JsonParticle, JPP: JsonParticleParser<JP>
 > ParseStep<T, P, S, JP, JPP> {
-    pub fn new<F>(parser: P, next_creator: F) -> Self
+    pub fn new<F>(parser_creator: Box<dyn Fn() -> P>, next_creator: F) -> Self
         where F: Fn(T) -> S + 'static
     {
         Self {
             _jp: PhantomData,
             _jpp: PhantomData,
-            parser,
+            parser_creator,
             next_creator: Box::new(next_creator)
         }
     }
@@ -44,8 +44,9 @@ impl<
     JP: JsonParticle, JPP: JsonParticleParser<JP>
 > JsonParsingStep<JP, JPP> for ParseStep<T, P, S, JP, JPP> {
     fn execute(&mut self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
-        if self.parser.can_parse(parsing_process) {
-            let result = self.parser.parse(parsing_process);
+        let mut new_parser = (self.parser_creator)();
+        if new_parser.can_parse(parsing_process) {
+            let result = new_parser.parse(parsing_process);
             match result {
                 JsonParsingResult::Value(value) => (self.next_creator)(value).execute(parser, parsing_process),
                 JsonParsingResult::Error(_) => Some(JsonParsingResultError::new(
