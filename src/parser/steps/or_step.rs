@@ -45,8 +45,8 @@ impl<JP: JsonParticle,  JPP: JsonParticleParser<JP>> OrStep<JP, JPP> {
 }
 
 impl<JP: JsonParticle, JPP: JsonParticleParser<JP>> JsonParsingStep<JP, JPP> for OrStep<JP, JPP> {
-    fn execute(&mut self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
-        for if_step in self.if_steps.iter_mut() {
+    fn execute(&self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
+        for if_step in self.if_steps.iter() {
             if (if_step.0)(parsing_process) {
                 return if_step.1.execute(parser, parsing_process);
             }

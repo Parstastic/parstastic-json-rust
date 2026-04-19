@@ -21,8 +21,8 @@ impl<const N: usize, JP: JsonParticle, JPP: JsonParticleParser<JP>> BlockStep<N,
 }
 
 impl<const N: usize, JP: JsonParticle, JPP: JsonParticleParser<JP>> JsonParsingStep<JP, JPP> for BlockStep<N, JP, JPP> {
-    fn execute(&mut self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
-        for instruction in self.instructions.iter_mut() {
+    fn execute(&self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
+        for instruction in self.instructions.iter() {
             let result = instruction.execute(parser, parsing_process);
             if result.is_some() {
                 return result;

@@ -23,7 +23,7 @@ impl ExportStep {
 }
 
 impl<JP: JsonParticle, JPP: JsonParticleParser<JP,>> JsonParsingStep<JP, JPP> for ExportStep {
-    fn execute(&mut self, _parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
+    fn execute(&self, _parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
         if (self.exporter)() {
             None
         } else {

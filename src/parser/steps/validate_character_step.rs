@@ -27,7 +27,7 @@ impl ValidateCharacterStep {
 }
 
 impl<JP: JsonParticle, JPP: JsonParticleParser<JP>> JsonParsingStep<JP, JPP> for ValidateCharacterStep {
-    fn execute(&mut self, _parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
+    fn execute(&self, _parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
         if parsing_process.is_char_valid(&self.validator) {
             None
         } else {

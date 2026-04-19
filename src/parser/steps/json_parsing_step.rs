@@ -8,5 +8,5 @@ use crate::{
 };
 
 pub trait JsonParsingStep<JP: JsonParticle, JPP: JsonParticleParser<JP>> {
-    fn execute(&mut self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError>;
+    fn execute(&self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError>;
 }

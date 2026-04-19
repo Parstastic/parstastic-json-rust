@@ -31,7 +31,7 @@ impl<JP: JsonParticle, JPP: JsonParticleParser<JP>> ParseCharacterStep<JP, JPP> 
 }
 
 impl<JP: JsonParticle, JPP: JsonParticleParser<JP>> JsonParsingStep<JP, JPP> for ParseCharacterStep<JP, JPP> {
-    fn execute(&mut self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
+    fn execute(&self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
         if parsing_process.is_index_in_json() {
             match parsing_process.get_char() {
                 Some(char) => {

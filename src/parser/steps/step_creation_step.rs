@@ -29,7 +29,7 @@ impl<T: JsonParsingStep<JP, JPP>, JP: JsonParticle, JPP: JsonParticleParser<JP>>
 }
 
 impl<T: JsonParsingStep<JP, JPP>, JP: JsonParticle, JPP: JsonParticleParser<JP>> JsonParsingStep<JP, JPP> for StepCreationStep<T, JP, JPP> {
-    fn execute(&mut self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
+    fn execute(&self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
         (self.step_creator)().execute(parser, parsing_process)
     }
 }

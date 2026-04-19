@@ -32,7 +32,7 @@ impl<T: JsonParsingStep<JP, JPP>, JP: JsonParticle, JPP: JsonParticleParser<JP>>
 }
 
 impl<T: JsonParsingStep<JP, JPP>, JP: JsonParticle, JPP: JsonParticleParser<JP>> JsonParsingStep<JP, JPP> for ForLoopStep<T, JP, JPP> {
-    fn execute(&mut self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
+    fn execute(&self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
         for _ in 0..self.iterations {
             let result = self.instruction.execute(parser, parsing_process);
             if result.is_some() {
