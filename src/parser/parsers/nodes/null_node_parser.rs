@@ -1,14 +1,19 @@
 use std::array::from_fn;
 
 use crate::{
-    node::{
-        nodes::null_node::{
-            NULL_NODE, NullNode, STRING_VALUE
-        }
+    node::nodes::null_node::{
+        NULL_NODE,
+        NullNode,
+        STRING_VALUE
     },
     parser::{
+        json_parsing_process::JsonParsingProcess,
         parsers::json_particle_parser::JsonParticleParser,
-        steps::{block_step::BlockStep, json_parsing_step::JsonParsingStep, parse_character_step::ParseCharacterStep}
+        steps::{
+            block_step::BlockStep,
+            json_parsing_step::JsonParsingStep,
+            parse_character_step::ParseCharacterStep
+        }
     }
 };
 
@@ -38,7 +43,7 @@ impl NullNodeParser {
 impl JsonParticleParser<NullNode> for NullNodeParser {
     type Step = BlockStep<N, NullNode, Self>;
 
-    fn can_parse(&self, parsing_process: &crate::parser::json_parsing_process::JsonParsingProcess) -> bool {
+    fn can_parse(&self, parsing_process: &JsonParsingProcess) -> bool {
         parsing_process.starts_with(STRING_VALUE)
     }
 
