@@ -12,6 +12,10 @@ impl BooleanNode {
     pub fn has_value(&self, value: bool) -> bool {
         self.value == value
     }
+
+    pub fn get_value(&self) -> bool {
+        self.value
+    }
 }
 
 impl JsonNode for BooleanNode {
