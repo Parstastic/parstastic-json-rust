@@ -30,14 +30,14 @@ impl<JP: JsonParticle + 'static,  JPP: JsonParticleParser<JP> + 'static> OrStep<
     pub fn else_error(if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>) -> Self {
         Self::new(
             if_steps,
-            Box::new(ExportStep::new(|_| false))
+            Box::new(ExportStep::new(|_, _| false))
         )
     }
 
     pub fn else_success(if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>) -> Self {
         Self::new(
             if_steps,
-            Box::new(ExportStep::new(|_| true))
+            Box::new(ExportStep::new(|_, _| true))
         )
     }
 }
