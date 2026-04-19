@@ -4,19 +4,21 @@ use crate::parser::{
     steps::json_parsing_step::JsonParsingStep
 };
 
-pub struct ExportStep<F: Fn() -> bool> {
-    exporter: F
+pub struct ExportStep {
+    exporter: Box<dyn Fn() -> bool>
 }
 
-impl<F: Fn() -> bool> ExportStep<F> {
-    pub fn new(exporter: F) -> Self {
+impl ExportStep {
+    pub fn new<F>(exporter: F) -> Self
+        where F: Fn() -> bool + 'static
+    {
         Self {
-            exporter: exporter
+            exporter: Box::new(exporter)
         }
     }
 }
 
-impl<F: Fn() -> bool> JsonParsingStep for ExportStep<F> {
+impl JsonParsingStep for ExportStep {
     fn execute(&self, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
         if (self.exporter)() {
             None
