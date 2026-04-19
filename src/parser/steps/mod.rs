@@ -5,4 +5,5 @@ pub mod json_parsing_step;
 pub mod loop_step;
 pub mod or_step;
 pub mod parse_character_step;
+pub mod validate_character_step;
 pub mod while_loop_step;
