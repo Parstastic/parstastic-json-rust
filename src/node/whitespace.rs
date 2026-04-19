@@ -3,6 +3,7 @@ use crate::node::{
     stringify_options::StringifyOptions
 };
 
+#[derive(Clone)]
 pub enum WhitespaceCharacter {
     Space,
     HorizontalTab,
@@ -67,6 +68,10 @@ impl Whitespace {
         Some(Self {
             characters
         })
+    }
+
+    pub fn get_characters(self) -> Vec<WhitespaceCharacter> {
+        self.characters
     }
 }
 
