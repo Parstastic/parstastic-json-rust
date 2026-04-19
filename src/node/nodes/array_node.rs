@@ -8,7 +8,10 @@ use crate::node::{
         },
         json_node::JsonNode
     },
-    stringify_options::StringifyOptions,
+    stringify_options::{
+        StringifyOptions,
+        StringifyOptionsContainer
+    },
     whitespace::Whitespace
 };
 
@@ -28,7 +31,8 @@ impl ArrayNode {
                 ContainerNodeValue::Whitespace(whitespace),
                 DELIMITER_START,
                 DELIMITER_END,
-                DELIMITER_ELEMENTS
+                DELIMITER_ELEMENTS,
+                StringifyOptionsContainer::ArrayNode,
             )
         }
     }
@@ -39,7 +43,8 @@ impl ArrayNode {
                 ContainerNodeValue::Elements(elements),
                 DELIMITER_START,
                 DELIMITER_END,
-                DELIMITER_ELEMENTS
+                DELIMITER_ELEMENTS,
+                StringifyOptionsContainer::ArrayNode,
             )
         }
     }

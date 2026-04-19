@@ -9,7 +9,10 @@ use crate::node::{
         json_node::JsonNode,
         string_node::StringNode
     },
-    stringify_options::StringifyOptions,
+    stringify_options::{
+        StringifyOptions,
+        StringifyOptionsContainer
+    },
     whitespace::Whitespace
 };
 
@@ -61,7 +64,8 @@ impl ObjectNode {
                 ContainerNodeValue::Whitespace(whitespace),
                 DELIMITER_START,
                 DELIMITER_END,
-                DELIMITER_ELEMENTS
+                DELIMITER_ELEMENTS,
+                StringifyOptionsContainer::ObjectNode,
             )
         }
     }
@@ -72,7 +76,8 @@ impl ObjectNode {
                 ContainerNodeValue::Elements(elements),
                 DELIMITER_START,
                 DELIMITER_END,
-                DELIMITER_ELEMENTS
+                DELIMITER_ELEMENTS,
+                StringifyOptionsContainer::ObjectNode,
             )
         }
     }
