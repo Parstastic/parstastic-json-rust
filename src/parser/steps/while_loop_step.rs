@@ -7,21 +7,23 @@ use crate::parser::{
     }
 };
 
-pub struct WhileLoopStep<T: JsonParsingStep, F: Fn(&JsonParsingProcess) -> bool> {
+pub struct WhileLoopStep<T: JsonParsingStep> {
     instruction: T,
-    continue_criteria: F
+    continue_criteria: Box<dyn Fn(&JsonParsingProcess) -> bool>
 }
 
-impl<T: JsonParsingStep, F: Fn(&JsonParsingProcess) -> bool> WhileLoopStep<T, F> {
-    pub fn new(instruction: T, continue_criteria: F) -> Self {
+impl<T: JsonParsingStep> WhileLoopStep<T> {
+    pub fn new<F>(instruction: T, continue_criteria: F) -> Self
+        where F: Fn(&JsonParsingProcess) -> bool + 'static
+    {
         Self {
             instruction,
-            continue_criteria
+            continue_criteria: Box::new(continue_criteria)
         }
     }
 }
 
-impl<T: JsonParsingStep, F: Fn(&JsonParsingProcess) -> bool> JsonParsingStep for WhileLoopStep<T, F> {
+impl<T: JsonParsingStep> JsonParsingStep for WhileLoopStep<T> {
     fn execute(&self, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
         while (self.continue_criteria)(parsing_process) {
             let result = self.instruction.execute(parsing_process);
@@ -33,6 +35,6 @@ impl<T: JsonParsingStep, F: Fn(&JsonParsingProcess) -> bool> JsonParsingStep for
     }
 }
 
-impl<T: JsonParsingStep, F: Fn(&JsonParsingProcess) -> bool> LoopStep for WhileLoopStep<T, F> {
+impl<T: JsonParsingStep> LoopStep for WhileLoopStep<T> {
     
 }
