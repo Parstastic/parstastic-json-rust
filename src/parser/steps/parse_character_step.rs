@@ -1,38 +1,48 @@
-use crate::parser::{
-    json_parsing_process::JsonParsingProcess,
-    json_parsing_result::JsonParsingResultError,
-    steps::json_parsing_step::JsonParsingStep
+use std::marker::PhantomData;
+
+use crate::{
+    node::json_particle::JsonParticle,
+    parser::{
+        json_parsing_process::JsonParsingProcess,
+        json_parsing_result::JsonParsingResultError,
+        parsers::json_particle_parser::JsonParticleParser,
+        steps::json_parsing_step::JsonParsingStep
+    }
 };
 
-pub struct ParseCharacterStep {
-    exporter: Box<dyn Fn(char) -> bool>
+pub struct ParseCharacterStep<JP: JsonParticle, JPP: JsonParticleParser<JP>> {
+    _jp: PhantomData<JP>,
+    exporter: Box<dyn Fn(&mut JPP, char) -> bool>
 }
 
-impl ParseCharacterStep {
+impl<JP: JsonParticle, JPP: JsonParticleParser<JP>> ParseCharacterStep<JP, JPP> {
     pub fn new<F>(exporter: F) -> Self
-        where F: Fn(char) -> bool + 'static
+        where F: Fn(&mut JPP, char) -> bool + 'static
     {
         Self {
+            _jp: PhantomData,
             exporter: Box::new(exporter)
         }
     }
 
     pub fn new_with_expected_character(character: char) -> Self {
-        Self::new(move |c| c == character)
+        Self::new(move |_jpp, c| c == character)
     }
 }
 
-impl JsonParsingStep for ParseCharacterStep {
-    fn execute(&self, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
+impl<JP: JsonParticle, JPP: JsonParticleParser<JP>> JsonParsingStep<JP, JPP> for ParseCharacterStep<JP, JPP> {
+    fn execute(&mut self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
         if parsing_process.is_index_in_json() {
-            if parsing_process.is_char_valid(&self.exporter) {
-                parsing_process.increment_index();
-                None
-            } else {
-                Some(JsonParsingResultError::new(
+            match parsing_process.get_char() {
+                Some(char) => {
+                    (self.exporter)(parser, char);
+                    parsing_process.increment_index();
+                    None
+                },
+                None => Some(JsonParsingResultError::new(
                     "The required character to parse was not found.".to_string(),
                     parsing_process.clone()
-                ))
+                )),
             }
         } else {
             Some(JsonParsingResultError::new(

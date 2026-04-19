@@ -13,30 +13,41 @@ use crate::{
     }
 };
 
-pub struct ParseStep<T: JsonParticle, P: JsonParticleParser<T, PS>, PS: JsonParsingStep, S: JsonParsingStep> {
+pub struct ParseStep<
+    T: JsonParticle, P: JsonParticleParser<T>, S: JsonParsingStep<JP, JPP>,
+    JP: JsonParticle, JPP: JsonParticleParser<JP>
+> {
+    _jp: PhantomData<JP>,
+    _jpp: PhantomData<JPP>,
     parser: P,
-    _parser_step: PhantomData<PS>,
     next_creator: Box<dyn Fn(T) -> S>
 }
 
-impl<T: JsonParticle, P: JsonParticleParser<T, PS>, PS: JsonParsingStep, S: JsonParsingStep> ParseStep<T, P, PS, S> {
+impl<
+    T: JsonParticle, P: JsonParticleParser<T>, S: JsonParsingStep<JP, JPP>,
+    JP: JsonParticle, JPP: JsonParticleParser<JP>
+> ParseStep<T, P, S, JP, JPP> {
     pub fn new<F>(parser: P, next_creator: F) -> Self
         where F: Fn(T) -> S + 'static
     {
         Self {
+            _jp: PhantomData,
+            _jpp: PhantomData,
             parser,
-            _parser_step: PhantomData,
             next_creator: Box::new(next_creator)
         }
     }
 }
 
-impl<T: JsonParticle, P: JsonParticleParser<T, PS>, PS: JsonParsingStep, S: JsonParsingStep> JsonParsingStep for ParseStep<T, P, PS, S> {
-    fn execute(&self, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
+impl<
+    T: JsonParticle, P: JsonParticleParser<T>, S: JsonParsingStep<JP, JPP>,
+    JP: JsonParticle, JPP: JsonParticleParser<JP>
+> JsonParsingStep<JP, JPP> for ParseStep<T, P, S, JP, JPP> {
+    fn execute(&mut self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
         if self.parser.can_parse(parsing_process) {
             let result = self.parser.parse(parsing_process);
             match result {
-                JsonParsingResult::Value(value) => (self.next_creator)(value).execute(parsing_process),
+                JsonParsingResult::Value(value) => (self.next_creator)(value).execute(parser, parsing_process),
                 JsonParsingResult::Error(_) => Some(JsonParsingResultError::new(
                     "An error occurred during usage of the parser.".to_string(),
                     parsing_process.clone()

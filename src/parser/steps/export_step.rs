@@ -1,7 +1,11 @@
-use crate::parser::{
-    json_parsing_process::JsonParsingProcess,
-    json_parsing_result::JsonParsingResultError,
-    steps::json_parsing_step::JsonParsingStep
+use crate::{
+    node::json_particle::JsonParticle,
+    parser::{
+        json_parsing_process::JsonParsingProcess,
+        json_parsing_result::JsonParsingResultError,
+        parsers::json_particle_parser::JsonParticleParser,
+        steps::json_parsing_step::JsonParsingStep
+    }
 };
 
 pub struct ExportStep {
@@ -18,8 +22,8 @@ impl ExportStep {
     }
 }
 
-impl JsonParsingStep for ExportStep {
-    fn execute(&self, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
+impl<JP: JsonParticle, JPP: JsonParticleParser<JP,>> JsonParsingStep<JP, JPP> for ExportStep {
+    fn execute(&mut self, _parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
         if (self.exporter)() {
             None
         } else {

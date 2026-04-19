@@ -7,27 +7,29 @@ use crate::{
     }
 };
 
-pub trait JsonParticleParser<T: JsonParticle, S: JsonParsingStep> {
+pub trait JsonParticleParser<T: JsonParticle>: Sized {
+    type Step: JsonParsingStep<T, Self>;
+
     fn can_parse_string(&self, json: String) -> bool {
         self.can_parse(&JsonParsingProcess::new_for_json(json))
     }
 
     fn can_parse(&self, parsing_process: &JsonParsingProcess) -> bool;
 
-    fn parse_string(&self, json: String) -> JsonParsingResult<T> {
+    fn parse_string(&mut self, json: String) -> JsonParsingResult<T> {
         self.parse(&mut JsonParsingProcess::new_for_json(json))
     }
 
-    fn parse(&self, parsing_process: &mut JsonParsingProcess) -> JsonParsingResult<T> {
-        let step = self.get_step();
-        let result = step.execute(parsing_process);
+    fn parse(&mut self, parsing_process: &mut JsonParsingProcess) -> JsonParsingResult<T> {
+        let mut step = self.get_step();
+        let result = step.execute(self, parsing_process);
         match result {
             Some(error) => JsonParsingResult::with_error(error),
             None => JsonParsingResult::with_value(self.create()),
         }
     }
 
-    fn get_step(&self) -> S;
+    fn get_step(&mut self) -> Self::Step;
 
     fn create(&self) -> T;
 }
