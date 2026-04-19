@@ -25,11 +25,19 @@ pub trait JsonParticleParser<T: JsonParticle>: Sized {
         let result = step.execute(self, parsing_process);
         match result {
             Some(error) => JsonParsingResult::with_error(error),
-            None => JsonParsingResult::with_value(self.create()),
+            None => {
+                match self.create() {
+                    Some(v) => JsonParsingResult::with_value(v),
+                    None => JsonParsingResult::with_error_to_create(
+                        "An error occurred during instantiation.".to_string(),
+                        parsing_process.clone()
+                    ),
+                }
+            },
         }
     }
 
     fn get_step(&mut self) -> Self::Step;
 
-    fn create(&self) -> T;
+    fn create(&self) -> Option<T>;
 }

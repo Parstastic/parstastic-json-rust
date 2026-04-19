@@ -46,7 +46,7 @@ impl JsonParticleParser<NullNode> for NullNodeParser {
         BlockStep::new(self.create_validation())
     }
 
-    fn create(&self) -> NullNode {
-        NULL_NODE
+    fn create(&self) -> Option<NullNode> {
+        Some(NULL_NODE)
     }
 }

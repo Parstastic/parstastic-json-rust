@@ -45,7 +45,7 @@ impl JsonParticleParser<JsonValue> for JsonValueParser {
         todo!()
     }
 
-    fn create(&self) -> JsonValue {
+    fn create(&self) -> Option<JsonValue> {
         todo!()
     }
 }
