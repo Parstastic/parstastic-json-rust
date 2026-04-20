@@ -38,7 +38,18 @@ pub struct NumberNodeExponent {
     value: u64
 }
 
+impl NumberNodeExponent {
+    pub fn new(is_capitalized: bool, sign: NumberNodeExponentSignSymbol, value: u64) -> Self {
+        Self {
+            is_capitalized,
+            sign,
+            value
+        }
+    }
+}
 
+
+#[derive(Clone, Copy)]
 pub enum NumberNodeExponentSignSymbol {
     Blank,
     Plus,
