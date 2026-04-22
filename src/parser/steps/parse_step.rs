@@ -44,7 +44,7 @@ impl<
     JP: JsonParticle, JPP: JsonParticleParser<JP>
 > JsonParsingStep<JP, JPP> for ParseStep<T, P, S, JP, JPP> {
     fn execute(&self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
-        let mut new_parser = (self.parser_creator)();
+        let new_parser = (self.parser_creator)();
         if new_parser.can_parse(parsing_process) {
             let result = new_parser.parse(parsing_process);
             match result {
