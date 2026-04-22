@@ -46,7 +46,7 @@ impl<P: JsonParticle> JsonNode for ContainerNode<P> {
 
 impl<P: JsonParticle> JsonParticle for ContainerNode<P> {
     fn stringify_with_options(&self, options: &StringifyOptions) -> String {
-        let options_for_this_node = options.for_container_node(self.stringify_options_type.clone());
+        let options_for_this_node = options.for_container_node(self.stringify_options_type);
         let mut s = String::new();
         s.push(self.delimiter_start);
         match &self.value {
@@ -57,7 +57,7 @@ impl<P: JsonParticle> JsonParticle for ContainerNode<P> {
                 for (i, val) in items.iter().enumerate() {
                     let is_last_element = i == items.len() - 1;
                     let options_for_this_element = if is_last_element {
-                        &options.for_container_node_last_element(self.stringify_options_type.clone())
+                        &options.for_container_node_last_element(self.stringify_options_type)
                     } else {
                         &options_for_this_node
                     };
