@@ -8,7 +8,10 @@ use crate::{
     },
     parser::{
         json_parsing_process::JsonParsingProcess,
-        parsers::json_particle_parser::JsonParticleParser,
+        parsers::{
+            json_particle_parser::JsonParticleParser,
+            nodes::json_node_parser::JsonNodeParser
+        },
         steps::{
             block_step::BlockStep,
             json_parsing_step::JsonParsingStep,
@@ -38,6 +41,10 @@ impl NullNodeParser {
             ) as Box<dyn JsonParsingStep<NullNode, Self>>
         })
     }
+}
+
+impl JsonNodeParser<NullNode> for NullNodeParser {
+
 }
 
 impl JsonParticleParser<NullNode> for NullNodeParser {
