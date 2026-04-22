@@ -10,7 +10,10 @@ use crate::{
     },
     parser::{
         json_parsing_process::JsonParsingProcess,
-        parsers::json_particle_parser::JsonParticleParser,
+        parsers::{
+            json_particle_parser::JsonParticleParser,
+            nodes::json_node_parser::JsonNodeParser
+        },
         steps::{
             block_step::BlockStep,
             export_step::ExportStep,
@@ -57,6 +60,10 @@ impl BooleanNodeParser {
             ]))
         )
     }
+}
+
+impl JsonNodeParser<BooleanNode> for BooleanNodeParser {
+
 }
 
 impl JsonParticleParser<BooleanNode> for BooleanNodeParser {
