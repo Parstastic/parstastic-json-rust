@@ -219,7 +219,7 @@ impl JsonParticleParser<NumberNode> for NumberNodeParser {
         ])
     }
 
-    fn create(&self) -> Option<NumberNode> {
+    fn create(self) -> Option<NumberNode> {
         let base = self.parse_base()?;
         Some(match self.parse_exponent() {
             Some(exponent) => NumberNode::new_with_exponent(base, exponent),

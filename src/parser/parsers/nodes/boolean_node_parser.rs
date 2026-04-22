@@ -80,7 +80,7 @@ impl JsonParticleParser<BooleanNode> for BooleanNodeParser {
         )
     }
 
-    fn create(&self) -> Option<BooleanNode> {
+    fn create(self) -> Option<BooleanNode> {
         let value = self.value?;
         Some(if value {
             TRUE

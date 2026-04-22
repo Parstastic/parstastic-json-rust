@@ -53,7 +53,7 @@ impl JsonParticleParser<Whitespace> for WhitespaceParser {
         )
     }
 
-    fn create(&self) -> Option<Whitespace> {
-        Some(Whitespace::new(self.characters.clone()))
+    fn create(self) -> Option<Whitespace> {
+        Some(Whitespace::new(self.characters))
     }
 }

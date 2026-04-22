@@ -125,7 +125,7 @@ impl JsonParticleParser<StringNode> for StringNodeParser {
         ])
     }
 
-    fn create(&self) -> Option<StringNode> {
+    fn create(self) -> Option<StringNode> {
         Some(StringNode::new(self.characters.iter().collect()))
     }
 }

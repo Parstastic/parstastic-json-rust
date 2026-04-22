@@ -16,13 +16,13 @@ pub trait JsonParticleParser<T: JsonParticle>: Sized {
 
     fn can_parse(&self, parsing_process: &JsonParsingProcess) -> bool;
 
-    fn parse_string(&mut self, json: String) -> JsonParsingResult<T> {
+    fn parse_string(self, json: String) -> JsonParsingResult<T> {
         self.parse(&mut JsonParsingProcess::new_for_json(json))
     }
 
-    fn parse(&mut self, parsing_process: &mut JsonParsingProcess) -> JsonParsingResult<T> {
+    fn parse(mut self, parsing_process: &mut JsonParsingProcess) -> JsonParsingResult<T> {
         let step = self.get_step();
-        let result = step.execute(self, parsing_process);
+        let result = step.execute(&mut self, parsing_process);
         match result {
             Some(error) => JsonParsingResult::with_error(error),
             None => {
@@ -39,5 +39,5 @@ pub trait JsonParticleParser<T: JsonParticle>: Sized {
 
     fn get_step(&mut self) -> Self::Step;
 
-    fn create(&self) -> Option<T>;
+    fn create(self) -> Option<T>;
 }
