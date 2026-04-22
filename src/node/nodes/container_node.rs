@@ -23,7 +23,7 @@ pub struct ContainerNode<P: JsonParticle> {
 }
 
 impl<P: JsonParticle> ContainerNode<P> {
-    pub(super) fn new(
+    pub fn new(
         value: ContainerNodeValue<P>,
         delimiter_start: char,
         delimiter_end: char,
