@@ -212,7 +212,7 @@ impl Minimal for ObjectNodeStringifyOptions<WhitespaceStringifyOptions> {
 }
 
 
-#[derive(Clone)]
+#[derive(Clone, Copy)]
 pub enum StringifyOptionsContainer {
     None,
     ArrayNode,
