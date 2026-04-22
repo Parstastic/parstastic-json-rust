@@ -34,12 +34,11 @@ impl<JP: JsonParticle, JPP: JsonParticleParser<JP>> JsonParsingStep<JP, JPP> for
     fn execute(&self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
         if parsing_process.is_index_in_json() {
             match parsing_process.get_char() {
-                Some(char) => {
-                    (self.exporter)(parser, char);
+                Some(char) if (self.exporter)(parser, char) => {
                     parsing_process.increment_index();
                     None
                 },
-                None => Some(JsonParsingResultError::new(
+                _ => Some(JsonParsingResultError::new(
                     "The required character to parse was not found.".to_string(),
                     parsing_process.clone()
                 )),
