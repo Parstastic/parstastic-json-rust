@@ -1,3 +1,4 @@
+pub mod array_node_parser;
 pub mod boolean_node_parser;
 pub mod container_node_parser;
 pub mod json_node_parser;
