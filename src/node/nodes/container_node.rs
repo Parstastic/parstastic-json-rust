@@ -38,6 +38,10 @@ impl<P: JsonParticle> ContainerNode<P> {
             stringify_options_type,
         }
     }
+
+    pub fn get_value(self) -> ContainerNodeValue<P> {
+        self.value
+    }
 }
 
 impl<P: JsonParticle> JsonNode for ContainerNode<P> {
