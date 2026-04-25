@@ -42,6 +42,29 @@ impl ObjectNodeProperty {
 }
 
 impl JsonParticle for ObjectNodeProperty {
+    type Value = (Whitespace, StringNode, Whitespace, JsonValue);
+    
+    type BorrowedValue<'a> = (&'a Whitespace, &'a StringNode, &'a Whitespace, &'a JsonValue)
+        where Self: 'a;
+    
+    fn extract_value(self) -> Self::Value {
+        (
+            self.leading_whitespace,
+            self.key,
+            self.trailing_whitespace,
+            self.value
+        )
+    }
+    
+    fn get_value<'a>(&'a self) -> Self::BorrowedValue<'a> {
+        (
+            &self.leading_whitespace,
+            &self.key,
+            &self.trailing_whitespace,
+            &self.value
+        )
+    }
+    
     fn stringify_with_options(&self, options: &StringifyOptions) -> String {
         let mut s = String::new();
         s.push_str(&options.get_object_node_property_leading_whitespace(&self.leading_whitespace).stringify_with_options(options));
@@ -94,6 +117,19 @@ impl JsonNode for ObjectNode {
 }
 
 impl JsonParticle for ObjectNode {
+    type Value = ContainerNodeValue<ObjectNodeProperty>;
+    
+    type BorrowedValue<'a> = &'a ContainerNodeValue<ObjectNodeProperty>
+        where Self: 'a;
+    
+    fn extract_value(self) -> Self::Value {
+        self.container_node.extract_value()
+    }
+    
+    fn get_value<'a>(&'a self) -> Self::BorrowedValue<'a> {
+        &self.container_node.get_value()
+    }
+    
     fn stringify_with_options(&self, options: &StringifyOptions) -> String {
         self.container_node.stringify_with_options(options)
     }

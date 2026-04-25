@@ -38,10 +38,6 @@ impl<P: JsonParticle> ContainerNode<P> {
             stringify_options_type,
         }
     }
-
-    pub fn get_value(self) -> ContainerNodeValue<P> {
-        self.value
-    }
 }
 
 impl<P: JsonParticle> JsonNode for ContainerNode<P> {
@@ -49,6 +45,19 @@ impl<P: JsonParticle> JsonNode for ContainerNode<P> {
 }
 
 impl<P: JsonParticle> JsonParticle for ContainerNode<P> {
+    type Value = ContainerNodeValue<P>;
+    
+    type BorrowedValue<'a> = &'a ContainerNodeValue<P>
+        where Self: 'a;
+    
+    fn extract_value(self) -> Self::Value {
+        self.value
+    }
+    
+    fn get_value<'a>(&'a self) -> Self::BorrowedValue<'a> {
+        &self.value
+    }
+    
     fn stringify_with_options(&self, options: &StringifyOptions) -> String {
         let options_for_this_node = options.for_container_node(self.stringify_options_type);
         let mut s = String::new();

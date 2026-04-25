@@ -55,6 +55,19 @@ impl JsonNode for ArrayNode {
 }
 
 impl JsonParticle for ArrayNode {
+    type Value = ContainerNodeValue<JsonValue>;
+    
+    type BorrowedValue<'a> = &'a ContainerNodeValue<JsonValue>
+        where Self: 'a;
+    
+    fn extract_value(self) -> Self::Value {
+        self.container_node.extract_value()
+    }
+    
+    fn get_value<'a>(&'a self) -> Self::BorrowedValue<'a> {
+        &self.container_node.get_value()
+    }
+
     fn stringify_with_options(&self, options: &StringifyOptions) -> String {
         self.container_node.stringify_with_options(options)
     }

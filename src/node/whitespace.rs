@@ -77,6 +77,19 @@ impl Whitespace {
 }
 
 impl JsonParticle for Whitespace {
+    type Value = Vec<WhitespaceCharacter>;
+    
+    type BorrowedValue<'a> = &'a Vec<WhitespaceCharacter>
+        where Self: 'a;
+    
+    fn extract_value(self) -> Self::Value {
+        self.characters
+    }
+    
+    fn get_value<'a>(&'a self) -> Self::BorrowedValue<'a> {
+        &self.characters
+    }
+    
     fn stringify_with_options(&self, _options: &StringifyOptions) -> String {
         WhitespaceCharacter::vec_to_string(&self.characters)
     }

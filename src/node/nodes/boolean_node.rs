@@ -12,10 +12,6 @@ impl BooleanNode {
     pub fn has_value(&self, value: bool) -> bool {
         self.value == value
     }
-
-    pub fn get_value(&self) -> bool {
-        self.value
-    }
 }
 
 impl JsonNode for BooleanNode {
@@ -23,6 +19,19 @@ impl JsonNode for BooleanNode {
 }
 
 impl JsonParticle for BooleanNode {
+    type Value = bool;
+    
+    type BorrowedValue<'a> = bool
+        where Self: 'a;
+    
+    fn extract_value(self) -> Self::Value {
+        self.value
+    }
+    
+    fn get_value<'a>(&'a self) -> Self::BorrowedValue<'a> {
+        self.value
+    }
+
     fn stringify_with_options(&self, _options: &StringifyOptions) -> String {
         self.value.to_string()
     }

@@ -1,5 +1,6 @@
 use crate::{
     node::{
+        json_particle::JsonParticle,
         json_value::JsonValue,
         nodes::{
             container_node::{
@@ -168,7 +169,7 @@ impl JsonParticleParser<ObjectNode> for ObjectNodeParser {
     }
 
     fn create(self) -> Option<ObjectNode> {
-        let value = self.container_node?.get_value();
+        let value = self.container_node?.extract_value();
         Some(match value {
             ContainerNodeValue::Whitespace(whitespace) => ObjectNode::new_with_whitespace(whitespace),
             ContainerNodeValue::Elements(elements) => ObjectNode::new_with_elements(elements),

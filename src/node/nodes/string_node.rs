@@ -24,6 +24,19 @@ impl JsonNode for StringNode {
 }
 
 impl JsonParticle for StringNode {
+    type Value = String;
+    
+    type BorrowedValue<'a> = &'a str
+        where Self: 'a;
+    
+    fn extract_value(self) -> Self::Value {
+        self.value
+    }
+    
+    fn get_value<'a>(&'a self) -> Self::BorrowedValue<'a> {
+        &self.value
+    }
+    
     fn stringify_with_options(&self, _options: &StringifyOptions) -> String {
         let mut s = String::new();
         s.push(DELIMITER);

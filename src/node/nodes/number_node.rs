@@ -121,6 +121,19 @@ impl JsonNode for NumberNode {
 }
 
 impl JsonParticle for NumberNode {
+    type Value = f64;
+    
+    type BorrowedValue<'a> = f64
+        where Self: 'a;
+    
+    fn extract_value(self) -> Self::Value {
+        self.get_numeric_value()
+    }
+    
+    fn get_value<'a>(&'a self) -> Self::BorrowedValue<'a> {
+        self.get_numeric_value()
+    }
+    
     fn stringify_with_options(&self, _options: &StringifyOptions) -> String {
         let mut s = String::new();
 

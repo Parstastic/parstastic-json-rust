@@ -56,6 +56,27 @@ impl JsonValue {
 }
 
 impl JsonParticle for JsonValue {
+    type Value = (Whitespace, JsonValueJsonNodeType, Whitespace);
+    
+    type BorrowedValue<'a> = (&'a Whitespace, &'a JsonValueJsonNodeType, &'a Whitespace)
+        where Self: 'a;
+    
+    fn extract_value(self) -> Self::Value {
+        (
+            self.leading_whitespace,
+            self.json_node,
+            self.trailing_whitespace,
+        )
+    }
+    
+    fn get_value<'a>(&'a self) -> Self::BorrowedValue<'a> {
+        (
+            &self.leading_whitespace,
+            &self.json_node,
+            &self.trailing_whitespace,
+        )
+    }
+
     fn stringify_with_options(&self, options: &StringifyOptions) -> String {
         let mut s = String::new();
         s.push_str(&options.get_json_value_leading_whitespace(&self.leading_whitespace).stringify_with_options(&options));
