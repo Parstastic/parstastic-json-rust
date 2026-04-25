@@ -46,7 +46,7 @@ impl WhitespaceStringifyOptions {
 
     fn one_space() -> Self {
         Self {
-            whitespace_creator: Box::new(|options| Some(Whitespace::new(vec![WhitespaceCharacter::Space])))
+            whitespace_creator: Box::new(|_| Some(Whitespace::new(vec![WhitespaceCharacter::Space])))
         }
     }
 
