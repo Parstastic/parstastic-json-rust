@@ -22,6 +22,10 @@ impl FullStringJsonParser {
         }
     }
 
+    pub fn parse_string_fully(self, json: String) -> JsonParsingResult<JsonValue> {
+        self.parse_fully(&mut JsonParsingProcess::new_for_json(json))
+    }
+
     pub fn parse_fully(self, parsing_process: &mut JsonParsingProcess) -> JsonParsingResult<JsonValue> {
         let result = self.parse(parsing_process);
         match result {
