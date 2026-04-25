@@ -84,7 +84,7 @@ impl NumberNodeParser {
                     Box::new(self.create_base_add_step()),
                     Box::new(WhileLoopStep::new(
                         self.create_base_add_step(),
-                        |p| p.is_char_valid(|c| Self::is_digit(c))
+                        |_, p| p.is_char_valid(|c| Self::is_digit(c))
                     ))
                 ]))
             )
@@ -123,7 +123,7 @@ impl NumberNodeParser {
                     }
                     true
                 }),
-                |p| p.is_char_valid(Self::is_digit)
+                |_, p| p.is_char_valid(Self::is_digit)
             ))
         ])
     }

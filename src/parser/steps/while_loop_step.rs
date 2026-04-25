@@ -17,12 +17,12 @@ pub struct WhileLoopStep<T: JsonParsingStep<JP, JPP>, JP: JsonParticle, JPP: Jso
     _jp: PhantomData<JP>,
     _jpp: PhantomData<JPP>,
     instruction: T,
-    continue_criteria: Box<dyn Fn(&JsonParsingProcess) -> bool>
+    continue_criteria: Box<dyn Fn(&JPP, &JsonParsingProcess) -> bool>
 }
 
 impl<T: JsonParsingStep<JP, JPP>, JP: JsonParticle, JPP: JsonParticleParser<JP>> WhileLoopStep<T, JP, JPP> {
     pub fn new<F>(instruction: T, continue_criteria: F) -> Self
-        where F: Fn(&JsonParsingProcess) -> bool + 'static
+        where F: Fn(&JPP, &JsonParsingProcess) -> bool + 'static
     {
         Self {
             _jp: PhantomData,
@@ -35,7 +35,7 @@ impl<T: JsonParsingStep<JP, JPP>, JP: JsonParticle, JPP: JsonParticleParser<JP>>
 
 impl<T: JsonParsingStep<JP, JPP>, JP: JsonParticle, JPP: JsonParticleParser<JP>> JsonParsingStep<JP, JPP> for WhileLoopStep<T, JP, JPP> {
     fn execute(&self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
-        while (self.continue_criteria)(parsing_process) {
+        while (self.continue_criteria)(parser, parsing_process) {
             let result = self.instruction.execute(parser, parsing_process);
             if result.is_some() {
                 return result;

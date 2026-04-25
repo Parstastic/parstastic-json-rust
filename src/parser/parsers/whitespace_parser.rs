@@ -49,7 +49,7 @@ impl JsonParticleParser<Whitespace> for WhitespaceParser {
                     None => false,
                 }
             }),
-            |p| p.is_char_valid(WhitespaceCharacter::is_whitespace_character)
+            |_, p| p.is_char_valid(WhitespaceCharacter::is_whitespace_character)
         )
     }
 

@@ -46,7 +46,7 @@ impl StringNodeParser {
     fn create_characters_parsing_step(&self) -> WhileLoopStep<OrStep<StringNode, Self>, StringNode, Self> {
         WhileLoopStep::new(
             self.create_character_parsing_step(),
-            |p| !p.is_at_char(DELIMITER)
+            |_, p| !p.is_at_char(DELIMITER)
         )
     }
 
