@@ -44,6 +44,7 @@ impl WhitespaceCharacter {
 }
 
 
+#[derive(Clone)]
 pub struct Whitespace {
     characters: Vec<WhitespaceCharacter>
 }
