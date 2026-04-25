@@ -36,18 +36,18 @@ impl BooleanNodeParser {
         }
     }
 
-    fn create_parsers_map(&self) -> Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<BooleanNode, Self>>)> {
+    fn create_parsers_map(&self) -> Vec<(Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<BooleanNode, Self>>)> {
         BOOLEAN_NODES.iter()
             .map(|n| self.create_entry(n))
             .collect()
     }
 
-    fn create_entry(&self, n: &BooleanNode) -> (Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<BooleanNode, Self>>) {
+    fn create_entry(&self, n: &BooleanNode) -> (Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<BooleanNode, Self>>) {
         let string_value = n.stringify();
         let len = string_value.len();
         let value = n.get_value();
         (
-            Box::new(move |p| p.starts_with(&string_value)),
+            Box::new(move |_, p| p.starts_with(&string_value)),
             Box::new(BlockStep::new([
                 Box::new(ForLoopStep::new(
                     ParseCharacterStep::new(|_, _| true),

@@ -12,13 +12,13 @@ use crate::{
 };
 
 pub struct OrStep<JP: JsonParticle, JPP: JsonParticleParser<JP>> {
-    if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>,
+    if_steps: Vec<(Box<dyn Fn(&JPP, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>,
     else_step: Box<dyn JsonParsingStep<JP, JPP>>
 }
 
 impl<JP: JsonParticle + 'static,  JPP: JsonParticleParser<JP> + 'static> OrStep<JP, JPP> {
     pub fn new(
-        if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>,
+        if_steps: Vec<(Box<dyn Fn(&JPP, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>,
         else_step: Box<dyn JsonParsingStep<JP, JPP>>
     ) -> Self {
         Self {
@@ -27,14 +27,14 @@ impl<JP: JsonParticle + 'static,  JPP: JsonParticleParser<JP> + 'static> OrStep<
         }
     }
 
-    pub fn else_error(if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>) -> Self {
+    pub fn else_error(if_steps: Vec<(Box<dyn Fn(&JPP, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>) -> Self {
         Self::new(
             if_steps,
             Box::new(ExportStep::new(|_, _| false))
         )
     }
 
-    pub fn else_success(if_steps: Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>) -> Self {
+    pub fn else_success(if_steps: Vec<(Box<dyn Fn(&JPP, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JP, JPP>>)>) -> Self {
         Self::new(
             if_steps,
             Box::new(ExportStep::new(|_, _| true))
@@ -45,7 +45,7 @@ impl<JP: JsonParticle + 'static,  JPP: JsonParticleParser<JP> + 'static> OrStep<
 impl<JP: JsonParticle, JPP: JsonParticleParser<JP>> JsonParsingStep<JP, JPP> for OrStep<JP, JPP> {
     fn execute(&self, parser: &mut JPP, parsing_process: &mut JsonParsingProcess) -> Option<JsonParsingResultError> {
         for if_step in self.if_steps.iter() {
-            if (if_step.0)(parsing_process) {
+            if (if_step.0)(parser, parsing_process) {
                 return if_step.1.execute(parser, parsing_process);
             }
         }

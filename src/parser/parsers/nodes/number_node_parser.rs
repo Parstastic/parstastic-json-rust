@@ -66,7 +66,7 @@ impl NumberNodeParser {
     fn create_base_sign_parser(&self) -> OrStep<NumberNode, Self> {
         OrStep::else_success(vec![
             (
-                Box::new(|p| p.is_at_char(NEGATIVE_NUMBER_PREFIX)),
+                Box::new(|_, p| p.is_at_char(NEGATIVE_NUMBER_PREFIX)),
                 Box::new(self.create_base_add_step())
             )
         ])
@@ -75,11 +75,11 @@ impl NumberNodeParser {
     fn create_base_parser(&self) -> OrStep<NumberNode, Self> {
         OrStep::else_error(vec![
             (
-                Box::new(|p| p.is_char_valid(|c| Self::is_digit_zero(c))),
+                Box::new(|_, p| p.is_char_valid(|c| Self::is_digit_zero(c))),
                 Box::new(self.create_base_add_step())
             ),
             (
-                Box::new(|p| p.is_char_valid(|c| Self::is_digit_one_to_nine(c))),
+                Box::new(|_, p| p.is_char_valid(|c| Self::is_digit_one_to_nine(c))),
                 Box::new(BlockStep::new([
                     Box::new(self.create_base_add_step()),
                     Box::new(WhileLoopStep::new(
@@ -94,7 +94,7 @@ impl NumberNodeParser {
     fn create_fraction_parser(&mut self) -> OrStep<NumberNode, Self> {
         OrStep::else_success(vec![
             (
-                Box::new(|p| p.is_at_char(DECIMAL_DELIMITER)),
+                Box::new(|_, p| p.is_at_char(DECIMAL_DELIMITER)),
                 Box::new(BlockStep::new([
                     Box::new(self.create_base_add_step()),
                     Box::new(self.create_while_loop_with_at_least_one_iteration_parser(false))
@@ -131,7 +131,7 @@ impl NumberNodeParser {
     fn create_exponent_parser(&self) -> OrStep<NumberNode, Self> {
         OrStep::else_success(vec![
             (
-                Box::new(|p| p.is_char_valid(
+                Box::new(|_, p| p.is_char_valid(
                     |c| c == EXPONENT_SYMBOL || c == EXPONENT_SYMBOL_CAPITALIZED
                 )),
                 Box::new(BlockStep::new([
@@ -159,9 +159,9 @@ impl NumberNodeParser {
         )
     }
 
-    fn create_exponent_sign_symbol_parser_entry(&self, exponent_sign_symbol: NumberNodeExponentSignSymbol) -> (Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<NumberNode, Self>>) {
+    fn create_exponent_sign_symbol_parser_entry(&self, exponent_sign_symbol: NumberNodeExponentSignSymbol) -> (Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<NumberNode, Self>>) {
         (
-            Box::new(move |p| p.starts_with(&exponent_sign_symbol.get_symbol())),
+            Box::new(move |_, p| p.starts_with(&exponent_sign_symbol.get_symbol())),
             Box::new(ExportStep::new(move |p: &mut NumberNodeParser, _| {
                 p.exponent_sign = Some(exponent_sign_symbol);
                 true

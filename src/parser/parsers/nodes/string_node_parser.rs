@@ -53,7 +53,7 @@ impl StringNodeParser {
     fn create_character_parsing_step(&self) -> OrStep<StringNode, Self> {
         OrStep::new(
             vec![(
-                Box::new(|p| p.is_at_char('\\')),
+                Box::new(|_, p| p.is_at_char('\\')),
                 Box::new(BlockStep::new([
                     Box::new(self.create_add_character_step()),
                     Box::new(self.create_escape_targets_parsing_step()),
@@ -70,7 +70,7 @@ impl StringNodeParser {
         )
     }
 
-    fn create_escape_targets_parser_map(&self) -> Vec<(Box<dyn Fn(&JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<StringNode, Self>>)> {
+    fn create_escape_targets_parser_map(&self) -> Vec<(Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<StringNode, Self>>)> {
         vec![
             '"',
             '\\',
@@ -83,7 +83,7 @@ impl StringNodeParser {
         ]
             .into_iter()
             .map(|c| {
-                let condition: Box<dyn Fn(&JsonParsingProcess) -> bool> = Box::new(move |p: &JsonParsingProcess| p.is_at_char(c));
+                let condition: Box<dyn Fn(&Self, &JsonParsingProcess) -> bool> = Box::new(move |_, p: &JsonParsingProcess| p.is_at_char(c));
                 let effect: Box<dyn JsonParsingStep<StringNode, Self>> = Box::new(self.create_add_character_step());
 
                 (condition, effect)
