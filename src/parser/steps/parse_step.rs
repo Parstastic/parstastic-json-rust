@@ -19,7 +19,7 @@ pub struct ParseStep<
 > {
     _jp: PhantomData<JP>,
     _jpp: PhantomData<JPP>,
-    parser_creator: Box<dyn Fn(&mut JPP) -> P>,
+    parser_creator: Box<dyn Fn(&JPP) -> P>,
     next_creator: Box<dyn Fn(T, &mut JPP, &mut JsonParsingProcess) -> Option<JsonParsingResultError>>
 }
 
@@ -29,7 +29,7 @@ impl<
 > ParseStep<T, P, JP, JPP> {
     pub fn new<F1, F2>(parser_creator: F1, next_creator: F2) -> Self
         where
-            F1: Fn(&mut JPP) -> P + 'static,
+            F1: Fn(&JPP) -> P + 'static,
             F2: Fn(T, &mut JPP, &mut JsonParsingProcess) -> Option<JsonParsingResultError> + 'static
     {
         Self {

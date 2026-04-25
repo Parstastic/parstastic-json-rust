@@ -78,7 +78,7 @@ impl JsonValueParser {
 
     fn create_parse_step<J: JsonParticle, P: JsonParticleParser<J>, F1, F2>(&self, parser_creator: F1, next: F2) -> ParseStep<J, P, JsonValue, Self>
         where
-            F1: Fn(&mut Self) -> P + 'static,
+            F1: Fn(&Self) -> P + 'static,
             F2: Fn(J, &mut Self) + 'static
     {
         ParseStep::new(

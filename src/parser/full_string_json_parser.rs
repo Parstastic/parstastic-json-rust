@@ -48,7 +48,7 @@ impl JsonParticleParser<JsonValue> for FullStringJsonParser {
 
     fn get_step(&mut self) -> Self::Step {
         ParseStep::new(
-            |_: &mut Self| JsonValueParser::new(),
+            |_: &Self| JsonValueParser::new(),
             |v, p, _| {
                 p.json_value = Some(v);
                 None

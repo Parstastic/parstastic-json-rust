@@ -65,7 +65,7 @@ impl JsonParticleParser<ArrayNode> for ArrayNodeParser {
 
     fn get_step(&mut self) -> Self::Step {
         ParseStep::new(
-            |p: &mut Self| p.create_container_node_parser(),
+            |p: &Self| p.create_container_node_parser(),
             |container_node, p, _| {
                 p.container_node = Some(container_node);
                 None

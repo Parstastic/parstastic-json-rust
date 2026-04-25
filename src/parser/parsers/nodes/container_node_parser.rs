@@ -82,7 +82,7 @@ impl<P: JsonParticle + 'static, JPP: JsonParticleParser<P> + 'static> ContainerN
     fn create_elements_parser(&self, whitespace: Whitespace) -> BlockStep<2, ContainerNode<P>, Self> {
         BlockStep::new([
             Box::new(ParseStep::new(
-                move |p: &mut Self| (p.get_element_parser_with_whitespace)(whitespace.clone()),
+                move |p: &Self| (p.get_element_parser_with_whitespace)(whitespace.clone()),
                 |element, p: &mut Self, _| {
                     p.elements.push(element);
                     None
@@ -92,7 +92,7 @@ impl<P: JsonParticle + 'static, JPP: JsonParticleParser<P> + 'static> ContainerN
                 BlockStep::new([
                     Box::new(ParseCharacterStep::new(|_, _| true)),
                     Box::new(ParseStep::new(
-                        |p: &mut Self| (p.get_element_parser)(),
+                        |p: &Self| (p.get_element_parser)(),
                         |element, parser: &mut Self, _| {
                             parser.elements.push(element);
                             None

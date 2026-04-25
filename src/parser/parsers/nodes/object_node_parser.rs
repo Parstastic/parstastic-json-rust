@@ -76,7 +76,7 @@ impl JsonParticleParser<ObjectNodeProperty> for ObjectNodePropertyParser {
     fn get_step(&mut self) -> Self::Step {
         BlockStep::new([
             Box::new(ParseStep::new(
-                |p: &mut Self| {
+                |p: &Self| {
                     match &p.leading_whitespace {
                         Some(whitespace) => WhitespaceParser::new_with_whitespace(whitespace.clone()),
                         None => WhitespaceParser::new(),
@@ -88,14 +88,14 @@ impl JsonParticleParser<ObjectNodeProperty> for ObjectNodePropertyParser {
                 }
             )),
             Box::new(ParseStep::new(
-                |_: &mut Self| StringNodeParser::new(),
+                |_: &Self| StringNodeParser::new(),
                 |s, p, _| {
                     p.key = Some(s);
                     None
                 }
             )),
             Box::new(ParseStep::new(
-                |_: &mut Self| WhitespaceParser::new(),
+                |_: &Self| WhitespaceParser::new(),
                 |w, p, _| {
                     p.trailing_whitespace = Some(w);
                     None
@@ -103,7 +103,7 @@ impl JsonParticleParser<ObjectNodeProperty> for ObjectNodePropertyParser {
             )),
             Box::new(ParseCharacterStep::new_with_expected_character(KEY_VALUE_DELIMITER)),
             Box::new(ParseStep::new(
-                |_: &mut Self| JsonValueParser::new(),
+                |_: &Self| JsonValueParser::new(),
                 |v, p, _| {
                     p.value = Some(v);
                     None
@@ -159,7 +159,7 @@ impl JsonParticleParser<ObjectNode> for ObjectNodeParser {
 
     fn get_step(&mut self) -> Self::Step {
         ParseStep::new(
-            |p: &mut Self| p.create_container_node_parser(),
+            |p: &Self| p.create_container_node_parser(),
             |container_node, p, _| {
                 p.container_node = Some(container_node);
                 None
