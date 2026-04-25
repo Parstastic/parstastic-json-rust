@@ -5,11 +5,11 @@ use crate::node::whitespace::{
     WhitespaceCharacter
 };
 
-trait Pretty {
+pub trait Pretty {
     fn pretty() -> Self;
 }
 
-trait Minimal {
+pub trait Minimal {
     fn minimal() -> Self;
 }
 
