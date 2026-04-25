@@ -1,7 +1,10 @@
 use crate::{
     node::{
         json_particle::JsonParticle,
-        json_value::JsonValue,
+        json_value::{
+            JsonValue,
+            JsonValueJsonNodeType
+        },
         nodes::json_node::JsonNode,
         whitespace::Whitespace
     },
@@ -31,7 +34,7 @@ use crate::{
 
 pub struct JsonValueParser {
     leading_whitespace: Option<Whitespace>,
-    json_node: Option<Box<dyn JsonNode>>,
+    json_node: Option<JsonValueJsonNodeType>,
     trailing_whitespace: Option<Whitespace>,
 }
 
@@ -54,24 +57,56 @@ impl JsonValueParser {
 
     fn create_parsers_map(&self) -> Vec<(Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JsonValue, Self>>)> {
         vec![
-            self.create_parser_entry(|| StringNodeParser::new()),
-            self.create_parser_entry(|| NumberNodeParser::new()),
-            self.create_parser_entry(|| ObjectNodeParser::new()),
-            self.create_parser_entry(|| ArrayNodeParser::new()),
-            self.create_parser_entry(|| BooleanNodeParser::new()),
-            self.create_parser_entry(|| NullNodeParser::new()),
+            self.create_parser_entry(
+                || StringNodeParser::new(),
+                |v| JsonValueJsonNodeType::StringNode(v),
+            ),
+            self.create_parser_entry(
+                || NumberNodeParser::new(),
+                |v| JsonValueJsonNodeType::NumberNode(v),
+            ),
+            self.create_parser_entry(
+                || ObjectNodeParser::new(),
+                |v| JsonValueJsonNodeType::ObjectNode(v),
+            ),
+            self.create_parser_entry(
+                || ArrayNodeParser::new(),
+                |v| JsonValueJsonNodeType::ArrayNode(v),
+            ),
+            self.create_parser_entry(
+                || BooleanNodeParser::new(),
+                |v| JsonValueJsonNodeType::BooleanNode(v),
+            ),
+            self.create_parser_entry(
+                || NullNodeParser::new(),
+                |v| JsonValueJsonNodeType::NullNode(v),
+            ),
         ]
     }
 
-    fn create_parser_entry<J: JsonNode + 'static, P: JsonNodeParser<J> + 'static, F>(&self, parser_creator: F) -> (Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JsonValue, Self>>)
-        where F: Fn() -> P + 'static,
+    fn create_parser_entry<
+        J: JsonNode + 'static,
+        P: JsonNodeParser<J> + 'static,
+        F1,
+        F2
+    >(
+        &self,
+        parser_creator: F1,
+        json_node_creator: F2,
+    ) -> (
+        Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>,
+        Box<dyn JsonParsingStep<JsonValue, Self>>
+    )
+        where
+            F1: Fn() -> P + 'static,
+            F2: Fn(J) -> JsonValueJsonNodeType + 'static,
     {
         let parser = parser_creator();
         (
             Box::new(move |_, p| parser.can_parse(p)),
             Box::new(self.create_parse_step(
                 move |_| parser_creator(),
-                |v, p| p.json_node = Some(Box::new(v))
+                move |v, p| p.json_node = Some(json_node_creator(v))
             ))
         )
     }
