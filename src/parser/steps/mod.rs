@@ -6,6 +6,5 @@ pub mod loop_step;
 pub mod or_step;
 pub mod parse_character_step;
 pub mod parse_step;
-pub mod step_creation_step;
 pub mod validate_character_step;
 pub mod while_loop_step;
