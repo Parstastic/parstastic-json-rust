@@ -50,7 +50,7 @@ impl BooleanNodeParser {
             Box::new(BlockStep::new([
                 Box::new(ForLoopStep::new(
                     ParseCharacterStep::new(|_, _| true),
-                    len as u32
+                    len
                 )),
                 Box::new(ExportStep::new_with_value(|p: &mut BooleanNodeParser, v| {
                     p.value = Some(*v);

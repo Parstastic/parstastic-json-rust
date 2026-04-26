@@ -17,11 +17,11 @@ pub struct ForLoopStep<T: JsonParsingStep<JP, JPP>, JP: JsonParticle, JPP: JsonP
     _jp: PhantomData<JP>,
     _jpp: PhantomData<JPP>,
     instruction: T,
-    iterations: u32
+    iterations: usize
 }
 
 impl<T: JsonParsingStep<JP, JPP>, JP: JsonParticle, JPP: JsonParticleParser<JP>> ForLoopStep<T, JP, JPP> {
-    pub fn new(instruction: T, iterations: u32) -> Self {
+    pub fn new(instruction: T, iterations: usize) -> Self {
         Self {
             _jp: PhantomData,
             _jpp: PhantomData,
