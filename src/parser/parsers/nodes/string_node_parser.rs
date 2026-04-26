@@ -43,16 +43,16 @@ impl StringNodeParser {
         ParseCharacterStep::new_with_expected_character(DELIMITER)
     }
 
-    fn create_characters_parsing_step(&self) -> WhileLoopStep<OrStep<StringNode, Self>, StringNode, Self> {
+    fn create_characters_parsing_step(&self) -> WhileLoopStep<OrStep<1, StringNode, Self>, StringNode, Self> {
         WhileLoopStep::new(
             self.create_character_parsing_step(),
             |_, p| !p.is_at_char(DELIMITER)
         )
     }
 
-    fn create_character_parsing_step(&self) -> OrStep<StringNode, Self> {
+    fn create_character_parsing_step(&self) -> OrStep<1, StringNode, Self> {
         OrStep::new(
-            vec![(
+            [(
                 Box::new(|_, p| p.is_at_char('\\')),
                 Box::new(BlockStep::new([
                     Box::new(self.create_add_character_step()),
@@ -63,15 +63,15 @@ impl StringNodeParser {
         )
     }
 
-    fn create_escape_targets_parsing_step(&self) -> OrStep<StringNode, Self> {
+    fn create_escape_targets_parsing_step(&self) -> OrStep<8, StringNode, Self> {
         OrStep::new(
             self.create_escape_targets_parser_map(),
             self.create_unicode_parser()
         )
     }
 
-    fn create_escape_targets_parser_map(&self) -> Vec<(Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<StringNode, Self>>)> {
-        vec![
+    fn create_escape_targets_parser_map(&self) -> [(Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<StringNode, Self>>); 8] {
+        [
             '"',
             '\\',
             '/',
@@ -81,14 +81,12 @@ impl StringNodeParser {
             'r',
             't'
         ]
-            .into_iter()
             .map(|c| {
                 let condition: Box<dyn Fn(&Self, &JsonParsingProcess) -> bool> = Box::new(move |_, p: &JsonParsingProcess| p.is_at_char(c));
                 let effect: Box<dyn JsonParsingStep<StringNode, Self>> = Box::new(self.create_add_character_step());
 
                 (condition, effect)
             })
-            .collect()
     }
 
     fn create_unicode_parser(&self) -> Box<dyn JsonParsingStep<StringNode, Self>> {

@@ -36,10 +36,9 @@ impl BooleanNodeParser {
         }
     }
 
-    fn create_parsers_map(&self) -> Vec<(Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<BooleanNode, Self>>)> {
-        BOOLEAN_NODES.iter()
-            .map(|n| self.create_entry(n))
-            .collect()
+    fn create_parsers_map(&self) -> [(Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<BooleanNode, Self>>); 2] {
+        BOOLEAN_NODES
+            .map(|n| self.create_entry(&n))
     }
 
     fn create_entry(&self, n: &BooleanNode) -> (Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<BooleanNode, Self>>) {
@@ -67,7 +66,7 @@ impl JsonNodeParser<BooleanNode> for BooleanNodeParser {
 }
 
 impl JsonParticleParser<BooleanNode> for BooleanNodeParser {
-    type Step = OrStep<BooleanNode, Self>;
+    type Step = OrStep<2, BooleanNode, Self>;
 
     fn can_parse(&self, parsing_process: &JsonParsingProcess) -> bool {
         BOOLEAN_NODES.iter()

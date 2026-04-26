@@ -67,7 +67,7 @@ impl<P: JsonParticle + 'static, JPP: JsonParticleParser<P> + 'static> ContainerN
         ParseStep::new(
             |_| WhitespaceParser::new(),
             |w, parser: &mut Self, parsing_process| OrStep::new(
-                vec![(
+                [(
                     Box::new(|parser: &Self, p| !p.is_at_char(parser.delimiter_end)),
                     Box::new(parser.create_elements_parser(w.clone())),
                 )],

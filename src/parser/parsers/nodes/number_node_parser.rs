@@ -63,8 +63,8 @@ impl NumberNodeParser {
         })
     }
 
-    fn create_base_sign_parser(&self) -> OrStep<NumberNode, Self> {
-        OrStep::else_success(vec![
+    fn create_base_sign_parser(&self) -> OrStep<1, NumberNode, Self> {
+        OrStep::else_success([
             (
                 Box::new(|_, p| p.is_at_char(NEGATIVE_NUMBER_PREFIX)),
                 Box::new(self.create_base_add_step())
@@ -72,8 +72,8 @@ impl NumberNodeParser {
         ])
     }
 
-    fn create_base_parser(&self) -> OrStep<NumberNode, Self> {
-        OrStep::else_error(vec![
+    fn create_base_parser(&self) -> OrStep<2, NumberNode, Self> {
+        OrStep::else_error([
             (
                 Box::new(|_, p| p.is_char_valid(|c| Self::is_digit_zero(c))),
                 Box::new(self.create_base_add_step())
@@ -91,8 +91,8 @@ impl NumberNodeParser {
         ])
     }
 
-    fn create_fraction_parser(&mut self) -> OrStep<NumberNode, Self> {
-        OrStep::else_success(vec![
+    fn create_fraction_parser(&mut self) -> OrStep<1, NumberNode, Self> {
+        OrStep::else_success([
             (
                 Box::new(|_, p| p.is_at_char(DECIMAL_DELIMITER)),
                 Box::new(BlockStep::new([
@@ -128,8 +128,8 @@ impl NumberNodeParser {
         ])
     }
 
-    fn create_exponent_parser(&self) -> OrStep<NumberNode, Self> {
-        OrStep::else_success(vec![
+    fn create_exponent_parser(&self) -> OrStep<1, NumberNode, Self> {
+        OrStep::else_success([
             (
                 Box::new(|_, p| p.is_char_valid(
                     |c| c == EXPONENT_SYMBOL || c == EXPONENT_SYMBOL_CAPITALIZED
@@ -146,9 +146,9 @@ impl NumberNodeParser {
         ])
     }
 
-    fn create_exponent_sign_parser(&self) -> OrStep<NumberNode, Self> {
+    fn create_exponent_sign_parser(&self) -> OrStep<2, NumberNode, Self> {
         OrStep::new(
-            vec![
+            [
                 self.create_exponent_sign_symbol_parser_entry(NumberNodeExponentSignSymbol::Plus),
                 self.create_exponent_sign_symbol_parser_entry(NumberNodeExponentSignSymbol::Minus)
             ],

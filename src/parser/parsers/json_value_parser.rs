@@ -55,8 +55,8 @@ impl JsonValueParser {
         }
     }
 
-    fn create_parsers_map(&self) -> Vec<(Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JsonValue, Self>>)> {
-        vec![
+    fn create_parsers_map(&self) -> [(Box<dyn Fn(&Self, &JsonParsingProcess) -> bool>, Box<dyn JsonParsingStep<JsonValue, Self>>); 6] {
+        [
             self.create_parser_entry(
                 || StringNodeParser::new(),
                 |v| JsonValueJsonNodeType::StringNode(v),
