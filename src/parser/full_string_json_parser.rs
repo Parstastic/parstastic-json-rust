@@ -22,6 +22,10 @@ impl FullStringJsonParser {
         }
     }
 
+    pub fn parse_string_fully_with_trailing_commas(self, json: String) -> JsonParsingResult<JsonValue> {
+        self.parse_fully(&mut JsonParsingProcess::new_for_json_with_trailing_commas(json))
+    }
+
     pub fn parse_string_fully(self, json: String) -> JsonParsingResult<JsonValue> {
         self.parse_fully(&mut JsonParsingProcess::new_for_json(json))
     }

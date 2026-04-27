@@ -1,19 +1,29 @@
 #[derive(Clone)]
 pub struct JsonParsingProcess {
     json: String,
-    index: usize
+    index: usize,
+    allow_trailing_commas: bool,
 }
 
 impl JsonParsingProcess {
-    fn new(json: String, index: usize) -> Self {
+    fn new(json: String, index: usize, allow_trailing_commas: bool) -> Self {
         Self {
             json,
-            index
+            index,
+            allow_trailing_commas,
         }
     }
 
     pub fn new_for_json(json: String) -> Self {
-        Self::new(json, 0)
+        Self::new(json, 0, false)
+    }
+
+    pub fn new_for_json_with_trailing_commas(json: String) -> Self {
+        Self::new(json, 0, true)
+    }
+
+    pub fn are_trailing_commas_allowed(&self) -> bool {
+        self.allow_trailing_commas
     }
 
     pub fn increment_index(&mut self) {

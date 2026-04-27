@@ -92,11 +92,24 @@ impl<P: JsonParticle + 'static, JPP: JsonParticleParser<P> + 'static> ContainerN
                 BlockStep::new([
                     Box::new(ParseCharacterStep::new(|_, _| true)),
                     Box::new(ParseStep::new(
-                        |p: &Self| (p.get_element_parser)(),
-                        |element, parser: &mut Self, _| {
-                            parser.elements.push(element);
-                            None
-                        }
+                        |_| WhitespaceParser::new(),
+                        |w, parser: &mut Self, parsing_process| OrStep::new(
+                            [
+                                (
+                                    Box::new(|parser: &Self, p| p.is_at_char(parser.delimiter_end) && p.are_trailing_commas_allowed()),
+                                    Box::new(ExportStep::new(|_, _| {
+                                        true
+                                    }))
+                                )
+                            ],
+                            Box::new(ParseStep::new(
+                                move |p: &Self| (p.get_element_parser_with_whitespace)(w.clone()),
+                                |element, parser: &mut Self, _| {
+                                    parser.elements.push(element);
+                                    None
+                                }
+                            ))
+                        ).execute(parser, parsing_process)
                     )),
                 ]),
                 |parser, p| p.is_at_char(parser.delimiter_elements)

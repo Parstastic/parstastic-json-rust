@@ -16,6 +16,10 @@ pub trait JsonParticleParser<T: JsonParticle>: Sized {
 
     fn can_parse(&self, parsing_process: &JsonParsingProcess) -> bool;
 
+    fn parse_string_with_trailing_commas(self, json: String) -> JsonParsingResult<T> {
+        self.parse(&mut JsonParsingProcess::new_for_json_with_trailing_commas(json))
+    }
+
     fn parse_string(self, json: String) -> JsonParsingResult<T> {
         self.parse(&mut JsonParsingProcess::new_for_json(json))
     }
