@@ -142,7 +142,6 @@ impl ObjectNodeParser {
             DELIMITER_ELEMENTS,
             StringifyOptionsContainer::ArrayNode,
             |w| ObjectNodePropertyParser::new_with_leading_whitespace(w),
-            || ObjectNodePropertyParser::new()
         )
     }
 }

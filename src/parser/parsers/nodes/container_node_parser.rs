@@ -35,21 +35,18 @@ pub struct ContainerNodeParser<P: JsonParticle, JPP: JsonParticleParser<P>> {
     delimiter_elements: char,
     stringify_options_type: StringifyOptionsContainer,
     get_element_parser_with_whitespace: Box<dyn Fn(Whitespace) -> JPP>,
-    get_element_parser: Box<dyn Fn() -> JPP>,
 }
 
 impl<P: JsonParticle + 'static, JPP: JsonParticleParser<P> + 'static> ContainerNodeParser<P, JPP> {
-    pub fn new<F1, F2>(
+    pub fn new<F>(
         delimiter_start: char,
         delimiter_end: char,
         delimiter_elements: char,
         stringify_options_type: StringifyOptionsContainer,
-        get_element_parser_with_whitespace: F1,
-        get_element_parser: F2,
+        get_element_parser_with_whitespace: F,
     ) -> Self
     where
-        F1: Fn(Whitespace) -> JPP + 'static,
-        F2: Fn() -> JPP + 'static,
+        F: Fn(Whitespace) -> JPP + 'static,
     {
         Self {
             whitespace: None,
@@ -59,7 +56,6 @@ impl<P: JsonParticle + 'static, JPP: JsonParticleParser<P> + 'static> ContainerN
             delimiter_elements,
             stringify_options_type,
             get_element_parser_with_whitespace: Box::new(get_element_parser_with_whitespace),
-            get_element_parser: Box::new(get_element_parser),
         }
     }
 

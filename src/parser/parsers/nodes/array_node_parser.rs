@@ -48,7 +48,6 @@ impl ArrayNodeParser {
             DELIMITER_ELEMENTS,
             StringifyOptionsContainer::ArrayNode,
             |w| JsonValueParser::new_with_leading_whitespace(w),
-            || JsonValueParser::new()
         )
     }
 }
